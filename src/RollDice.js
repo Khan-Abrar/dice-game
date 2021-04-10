@@ -5,13 +5,21 @@ class RollDice extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { die1: "one", die2: "one", rolling: false };
+    this.state = { die1: "one", die2: "one", rolling: false, sum: 0 };
     this.roll = this.roll.bind(this);
   }
   roll() {
-    const newDie1 = this.sides[Math.floor(Math.random() * 6)];
-    const newDie2 = this.sides[Math.floor(Math.random() * 6)];
-    this.setState({ die1: newDie1, die2: newDie2, rolling: true });
+    const index1 = Math.floor(Math.random() * 6);
+    const index2 = Math.floor(Math.random() * 6);
+    const newDie1 = this.sides[index1];
+    const newDie2 = this.sides[index2];
+
+    this.setState({
+      die1: newDie1,
+      die2: newDie2,
+      rolling: true,
+      sum: index1 + 1 + index2 + 1,
+    });
 
     setTimeout(() => {
       this.setState({ rolling: false });
@@ -25,9 +33,7 @@ class RollDice extends Component {
             className={`Die ${
               this.state.rolling ? "shaking" : "txt"
             } fas fa-dice-${this.state.die1}`}
-          >
-            {console.log(this.state.rolling)}
-          </i>
+          ></i>
 
           <i
             className={`Die ${
@@ -38,6 +44,14 @@ class RollDice extends Component {
         <button onClick={this.roll} disabled={this.state.rolling}>
           {this.state.rolling ? "Rolling..." : "Roll Dice!"}
         </button>
+
+        <h1>
+          {this.state.sum === 0
+            ? ""
+            : this.state.sum % 2 === 0
+            ? "Even Roll!"
+            : "Odd Roll"}
+        </h1>
       </div>
     );
   }
