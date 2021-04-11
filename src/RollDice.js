@@ -5,20 +5,29 @@ class RollDice extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { die1: "one", die2: "one", rolling: false, sum: 0 };
+    this.state = {
+      die1: "one",
+      die2: "one",
+      rolling: false,
+      isWin: false,
+      default: true,
+    };
     this.roll = this.roll.bind(this);
   }
-  roll() {
+  roll(isEven) {
     const index1 = Math.floor(Math.random() * 6);
     const index2 = Math.floor(Math.random() * 6);
     const newDie1 = this.sides[index1];
     const newDie2 = this.sides[index2];
+    const sum = index1 + 1 + index2 + 1;
+    let isAnsEven = sum % 2 === 0 ? true : false;
 
     this.setState({
       die1: newDie1,
       die2: newDie2,
       rolling: true,
-      sum: index1 + 1 + index2 + 1,
+      isWin: isEven === isAnsEven,
+      default: false,
     });
 
     setTimeout(() => {
@@ -28,6 +37,8 @@ class RollDice extends Component {
   render() {
     return (
       <div className="RollDice">
+        <h1>Dice Roll</h1>
+
         <div className="RollDice-container">
           <i
             className={`Die ${
@@ -41,16 +52,24 @@ class RollDice extends Component {
             } fas fa-dice-${this.state.die2}`}
           ></i>
         </div>
-        <button onClick={this.roll} disabled={this.state.rolling}>
-          {this.state.rolling ? "Rolling..." : "Roll Dice!"}
-        </button>
-
+        <h3>Predict your next move from below and roll the dice!</h3>
+        <div className="RollDice-button">
+          <button onClick={() => this.roll(true)} disabled={this.state.rolling}>
+            {this.state.rolling ? "Rolling..." : "Even Roll"}
+          </button>
+          <button
+            onClick={() => this.roll(false)}
+            disabled={this.state.rolling}
+          >
+            {this.state.rolling ? "Rolling..." : "Odd Roll"}
+          </button>
+        </div>
         <h1>
-          {this.state.sum === 0
+          {this.state.default
             ? ""
-            : this.state.sum % 2 === 0
-            ? "Even Roll!"
-            : "Odd Roll"}
+            : this.state.isWin
+            ? "You Win!"
+            : "You Loose!"}
         </h1>
       </div>
     );
